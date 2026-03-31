@@ -1,3 +1,7 @@
+.snakemake
+raw_data/
+fastq/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
