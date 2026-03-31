@@ -1,6 +1,6 @@
 .snakemake
 raw_data/
-fastq/
+results/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
