@@ -1,0 +1,35 @@
+samples:
+  sample_1: raw_data/371712.fastq.gz
+  sample_2: raw_data/371713.fastq.gz
+  sample_3: raw_data/371714.fastq.gz
+  sample_4: raw_data/371715.fastq.gz
+  sample_5: raw_data/371716.fastq.gz
+
+reference:
+  fasta: fasta/rrna_sequence/rrna_35s.fa
+
+minimap2:
+  executable: /groups/plaschka/rupert.faraway/software/minimap2/minimap2-2.28_x64-linux/minimap2
+  preset: map-ont
+  extra: ""
+
+slurm:
+  time_limits:
+    short: "08:00:00"
+    medium: "2-00:00:00"
+  sbatch_extra: ""
+  jobs:
+    index_reference:
+      qos: c_short
+      mem: 8G
+    align_reads:
+      qos: c_medium
+      mem: 24G
+    index_aligned_bam:
+      qos: c_short
+      mem: 4G
+
+resources:
+  index_threads: 4
+  align_threads: 8
+  samtools_index_threads: 2
