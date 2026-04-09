@@ -88,6 +88,8 @@ ALIGNED_BAI = results_path("aligned", "{sample}.rrna_35s.aligned.bam.bai")
 UNALIGNED_BAM = results_path("unaligned", "{sample}.rrna_35s.unaligned.bam")
 MAPPING_STATS = results_path("stats", "{sample}.mapping.tsv")
 COMBINED_STATS = results_path("stats", "mapping_summary.tsv")
+THREE_PRIME_BW = results_path("bigwig", "{sample}.three_prime_ends.bw")
+REFERENCE_FAI = repo_path(config["reference"]["fasta"] + ".fai")
 INIT_SENTINEL = results_path(".workflow_dirs_initialized")
 WORKFLOW_DIRS = [
     results_path("reference"),
@@ -95,10 +97,12 @@ WORKFLOW_DIRS = [
     results_path("unaligned"),
     results_path("stats"),
     results_path("tmp", "align"),
+    results_path("bigwig"),
     log_path("reference"),
     log_path("align"),
     log_path("aligned_index"),
     log_path("stats"),
+    log_path("bigwig"),
     log_path("slurm"),
     log_path("workflow"),
     benchmark_path("reference"),
@@ -107,7 +111,7 @@ WORKFLOW_DIRS = [
 ]
 
 
-localrules: init_workflow_dirs, summarize_mapping, combine_mapping_stats
+localrules: init_workflow_dirs, summarize_mapping, combine_mapping_stats, three_prime_ends_bigwig
 
 
 rule all:
@@ -117,7 +121,8 @@ rule all:
             [ALIGNED_BAM, ALIGNED_BAI, UNALIGNED_BAM, MAPPING_STATS],
             sample=SAMPLES,
         ),
-        COMBINED_STATS
+        COMBINED_STATS,
+        expand(THREE_PRIME_BW, sample=SAMPLES)
 
 
 rule init_workflow_dirs:
@@ -283,3 +288,19 @@ rule combine_mapping_stats:
         str(ENV_YAML)
     script:
         str(SCRIPTS_DIR / "combine_mapping_stats.py")
+
+
+rule three_prime_ends_bigwig:
+    input:
+        init=INIT_SENTINEL,
+        bam=ALIGNED_BAM,
+        bai=ALIGNED_BAI,
+        fai=REFERENCE_FAI
+    output:
+        bw=THREE_PRIME_BW
+    log:
+        log_path("bigwig", "{sample}.three_prime_ends.log")
+    conda:
+        str(ENV_YAML)
+    script:
+        str(SCRIPTS_DIR / "three_prime_ends_bigwig.py")
