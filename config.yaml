@@ -4,6 +4,9 @@ samples:
   sample_3: raw_data/371714.fastq.gz
   sample_4: raw_data/371715.fastq.gz
   sample_5: raw_data/371716.fastq.gz
+  newsample_3: raw_data/374872.fastq.gz
+  newsample_4: raw_data/374873.fastq.gz
+  newsample_5: raw_data/374874.fastq.gz
 
 reference:
   fasta: fasta/rrna_sequence/rrna_35s.fa
